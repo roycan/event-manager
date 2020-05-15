@@ -6,7 +6,7 @@
     <title> Thank You! </title>
   </head>
   <body>
-    <h1> Thanks <%= name %> </h1>
+    <h1> Thanks <%= name.capitalize %> </h1>
     <p> Thanks for coming to our conference. It wouldn't have been the same without you! </p>
 
     <p>
@@ -16,10 +16,13 @@
 
     <table>
       <% if legislators.kind_of? (Array) %>
-        <tr> <th> Legislators </th> </tr>
+        <tr> <th> Legislators </th> <th> Website </th> </tr>
 
         <% legislators.each do |legislator|%>
-          <tr> <td> <%= legislator.name %> </td> </tr>
+          <tr>
+            <td> <%= legislator.name %> </td>
+            <td> <%= legislator.urls.join(", ") unless  legislator.urls == nil%> </td>
+          </tr>
         <%end %>
 
       <% else %>
