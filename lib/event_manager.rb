@@ -17,7 +17,7 @@ def legislators_by_zipcode(zipcode)
   begin
     civic_info = Google::Apis::CivicinfoV2::CivicInfoService.new
     civic_info.key = 'AIzaSyClRzDqDh5MsXwnCWi0kOiiBivP6JsSyBw'
-    response = civic_info.representative_info_by_address(address: 80202,
+    response = civic_info.representative_info_by_address(address: zipcode,
                             levels: 'country',
                             roles: ['legislatorUpperBody',
                               'legislatorLowerBody'])
@@ -47,12 +47,20 @@ contents.each do |row|
 
   legislators = legislators_by_zipcode(zipcode)
 
-  puts "#{name}  #{zipcode} #{legislators}"
+  puts "#{name}  #{zipcode} "
+  if legislators.kind_of? (Array)
+    legislators.each do |l|
+      puts l.name
+      puts l.urls
+    end
+  elsif legislators.kind_of? (String)
+    puts legislators
+  end
 
   template = ERB.new(template_letter)
   personal_letter = template.result(binding)
 
-  puts personal_letter
+  # puts personal_letter
 
   # create a file for each personal_letter
   Dir.mkdir("output") unless Dir.exist? ("output")
