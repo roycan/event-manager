@@ -1,9 +1,10 @@
+require "csv"
+
 puts "Event Manager Initialized"
 
-lines = File.readlines ("event_attendees.csv") if File.exist? ("event_attendees.csv")
+contents = CSV.open("event_attendees.csv", headers: true, header_converters: :symbol) if File.exist? ("event_attendees.csv")
 # Dir.glob("*").each { |f| puts f}
 
-lines.each_with_index do |line, idx|
-  next if idx == 0
-  puts line.split(",")[2]
+contents.each do |row|
+  puts name = row[:first_name]
 end
