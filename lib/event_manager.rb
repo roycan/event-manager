@@ -12,6 +12,23 @@ def clean_zipcode(zipcode)
 end
 
 
+def legislators_by_zipcode(zipcode)
+  begin
+    civic_info = Google::Apis::CivicinfoV2::CivicInfoService.new
+    civic_info.key = 'AIzaSyClRzDqDh5MsXwnCWi0kOiiBivP6JsSyBw'
+    response = civic_info.representative_info_by_address(address: 80202,
+                            levels: 'country',
+                            roles: ['legislatorUpperBody',
+                              'legislatorLowerBody'])
+    legislators = response.officials
+    return legislators = legislators.map(&:name).join(", ")
+  rescue
+    return legislators =  "You can find your representatives by visiting www.commoncause.org/take-action/find-elected-officials"
+  end
+end
+
+
+
 
 puts "Event Manager Initialized"
 
@@ -24,18 +41,7 @@ contents.each do |row|
 
   zipcode = clean_zipcode(zipcode)
 
-  begin
-    civic_info = Google::Apis::CivicinfoV2::CivicInfoService.new
-    civic_info.key = 'AIzaSyClRzDqDh5MsXwnCWi0kOiiBivP6JsSyBw'
-    response = civic_info.representative_info_by_address(address: 80202,
-                            levels: 'country',
-                            roles: ['legislatorUpperBody',
-                              'legislatorLowerBody'])
-    legislators = response.officials
-    legislators = legislators.map(&:name).join(", ")
-  rescue
-    return "You can find your representatives by visiting www.commoncause.org/take-action/find-elected-officials"
-  end
+  legislators = legislators_by_zipcode(zipcode)
 
   puts "#{name}  #{zipcode} #{legislators}"
 end
