@@ -6,5 +6,7 @@ contents = CSV.open("event_attendees.csv", headers: true, header_converters: :sy
 # Dir.glob("*").each { |f| puts f}
 
 contents.each do |row|
-  puts name = row[:first_name]
+  name = row[:first_name]
+  zipcode = row[:zipcode]
+  puts "#{name}  #{zipcode}"
 end
