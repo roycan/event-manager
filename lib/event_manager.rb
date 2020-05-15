@@ -38,6 +38,7 @@ contents = CSV.open("event_attendees.csv", headers: true, header_converters: :sy
 template_letter = File.read("form_letter.html")
 
 contents.each do |row|
+  id = row[0]
   name = row[:first_name]
   zipcode = row[:zipcode]
 
@@ -51,5 +52,13 @@ contents.each do |row|
   personal_letter = personal_letter.gsub("LEGISLATORS", legislators)
 
   puts personal_letter
+
+  # create a file for each personal_letter
+  Dir.mkdir("output") unless Dir.exist? ("output")
+  filename = "output/thanks_#{id}.html"
+
+  File.open(filename, 'w') do |file|
+    file.puts personal_letter
+  end
 
 end
