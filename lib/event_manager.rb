@@ -29,6 +29,21 @@ def legislators_by_zipcode(zipcode)
 end
 
 
+def save_template_letter(personal_letter, id)
+
+  # puts personal_letter
+
+  # create a file for each personal_letter
+  Dir.mkdir("output") unless Dir.exist? ("output")
+  filename = "output/thanks_#{id}.html"
+
+  File.open(filename, 'w') do |file|
+    file.puts personal_letter
+  end
+end
+
+
+
 
 
 puts "Event Manager Initialized"
@@ -48,26 +63,19 @@ contents.each do |row|
   legislators = legislators_by_zipcode(zipcode)
 
   puts "#{name}  #{zipcode} "
-  if legislators.kind_of? (Array)
-    legislators.each do |l|
-      puts l.name
-      puts l.urls
-    end
-  elsif legislators.kind_of? (String)
-    puts legislators
-  end
+  # if legislators.kind_of? (Array)
+  #   legislators.each do |l|
+  #     puts l.name
+  #     puts l.urls
+  #   end
+  # elsif legislators.kind_of? (String)
+  #   puts legislators
+  # end
 
   template = ERB.new(template_letter)
   personal_letter = template.result(binding)
 
-  # puts personal_letter
+  save_template_letter(personal_letter, id )
 
-  # create a file for each personal_letter
-  Dir.mkdir("output") unless Dir.exist? ("output")
-  filename = "output/thanks_#{id}.html"
-
-  File.open(filename, 'w') do |file|
-    file.puts personal_letter
-  end
 
 end
