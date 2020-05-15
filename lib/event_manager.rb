@@ -1,4 +1,6 @@
 require "csv"
+require 'google/apis/civicinfo_v2'
+
 
 def clean_zipcode(zipcode)
 
@@ -22,6 +24,13 @@ contents.each do |row|
 
   zipcode = clean_zipcode(zipcode)
 
+  civic_info = Google::Apis::CivicinfoV2::CivicInfoService.new
+  civic_info.key = 'AIzaSyClRzDqDh5MsXwnCWi0kOiiBivP6JsSyBw'
+  response = civic_info.representative_info_by_address(address: 80202,
+                          levels: 'country',
+                          roles: ['legislatorUpperBody',
+                            'legislatorLowerBody'])
+  legilators = response.officials
 
-  puts "#{name}  #{zipcode}"
+  puts "#{name}  #{zipcode} #{legilators}"
 end
