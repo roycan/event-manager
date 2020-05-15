@@ -24,13 +24,18 @@ contents.each do |row|
 
   zipcode = clean_zipcode(zipcode)
 
-  civic_info = Google::Apis::CivicinfoV2::CivicInfoService.new
-  civic_info.key = 'AIzaSyClRzDqDh5MsXwnCWi0kOiiBivP6JsSyBw'
-  response = civic_info.representative_info_by_address(address: 80202,
-                          levels: 'country',
-                          roles: ['legislatorUpperBody',
-                            'legislatorLowerBody'])
-  legilators = response.officials
+  begin
+    civic_info = Google::Apis::CivicinfoV2::CivicInfoService.new
+    civic_info.key = 'AIzaSyClRzDqDh5MsXwnCWi0kOiiBivP6JsSyBw'
+    response = civic_info.representative_info_by_address(address: 80202,
+                            levels: 'country',
+                            roles: ['legislatorUpperBody',
+                              'legislatorLowerBody'])
+    legislators = response.officials
+    legislators = legislators.map(&:name).join(", ")
+  rescue
+    return "You can find your representatives by visiting www.commoncause.org/take-action/find-elected-officials"
+  end
 
-  puts "#{name}  #{zipcode} #{legilators}"
+  puts "#{name}  #{zipcode} #{legislators}"
 end
