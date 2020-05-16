@@ -43,6 +43,22 @@ def save_template_letter(personal_letter, id)
 end
 
 
+def clean_phone_numbers(number)
+  num = number.gsub(/\D+/, '')
+
+  if num.length == 10
+    return num
+  elsif num.length == 11 and num[0] == 1
+    return num = num[1..11]
+  else
+    return ""
+  end
+
+end
+
+
+
+
 
 
 
@@ -57,20 +73,24 @@ contents.each do |row|
   id = row[0]
   name = row[:first_name]
   zipcode = row[:zipcode]
+  home_phone = row[:homephone]
+  home_phone = clean_phone_numbers(home_phone)
 
   zipcode = clean_zipcode(zipcode)
 
+  puts "#{name}  #{zipcode} #{home_phone}"
+
   legislators = legislators_by_zipcode(zipcode)
 
-  puts "#{name}  #{zipcode} "
-  # if legislators.kind_of? (Array)
-  #   legislators.each do |l|
-  #     puts l.name
-  #     puts l.urls
-  #   end
-  # elsif legislators.kind_of? (String)
-  #   puts legislators
-  # end
+
+  if legislators.kind_of? (Array)
+    legislators.each do |l|
+      puts l.name
+      puts l.urls
+    end
+  elsif legislators.kind_of? (String)
+    puts legislators
+  end
 
   template = ERB.new(template_letter)
   personal_letter = template.result(binding)
