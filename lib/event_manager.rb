@@ -75,10 +75,11 @@ contents.each do |row|
   zipcode = row[:zipcode]
   home_phone = row[:homephone]
   home_phone = clean_phone_numbers(home_phone)
+  reg_time = row[:regdate]
 
   zipcode = clean_zipcode(zipcode)
 
-  puts "#{name}  #{zipcode} #{home_phone}"
+  puts "#{name}  #{zipcode} #{home_phone} #{reg_time}"
 
   legislators = legislators_by_zipcode(zipcode)
 
