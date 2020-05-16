@@ -1,6 +1,7 @@
 require "csv"
 require 'google/apis/civicinfo_v2'
 require "erb"
+require "time"
 
 
 def clean_zipcode(zipcode)
@@ -57,6 +58,14 @@ def clean_phone_numbers(number)
 end
 
 
+def extract_time(t)
+  # puts t
+  format = "%m/%d/%y %H:%M"
+  timestamp =  DateTime.strptime(t, format )
+  # p timestamp.hour
+  p timestamp.strftime("%A")
+  return timestamp.strftime("%l%p")
+end
 
 
 
@@ -76,6 +85,7 @@ contents.each do |row|
   home_phone = row[:homephone]
   home_phone = clean_phone_numbers(home_phone)
   reg_time = row[:regdate]
+  reg_time = extract_time(reg_time)
 
   zipcode = clean_zipcode(zipcode)
 
@@ -84,14 +94,14 @@ contents.each do |row|
   legislators = legislators_by_zipcode(zipcode)
 
 
-  if legislators.kind_of? (Array)
-    legislators.each do |l|
-      puts l.name
-      puts l.urls
-    end
-  elsif legislators.kind_of? (String)
-    puts legislators
-  end
+  # if legislators.kind_of? (Array)
+  #   legislators.each do |l|
+  #     puts l.name
+  #     puts l.urls
+  #   end
+  # elsif legislators.kind_of? (String)
+  #   puts legislators
+  # end
 
   template = ERB.new(template_letter)
   personal_letter = template.result(binding)
